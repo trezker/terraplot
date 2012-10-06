@@ -12,7 +12,8 @@ var img_farm = null;
 var img_warrior = null;
 var img_grass = null;
 
-$(document).ready(function() {
+//$(document).ready(function() {
+$(window).load(function() {
 	canvas = document.getElementById("terraplot_canvas");
 	context = canvas.getContext("2d");
 	img_townhall = document.getElementById("img_townhall");
@@ -64,5 +65,7 @@ Your browser does not support the canvas element.
 <img id="img_farm" src="images/farm.png" />
 <img id="img_warrior" src="images/warrior.png" />
 <img id="img_grass" src="images/grass.png" />
+
+<span onclick="draw()">Redraw</span>
 
 </body>
