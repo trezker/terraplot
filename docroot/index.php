@@ -1,175 +1,126 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Terraplot</title>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script type="text/javascript">
-var canvas = null;
-var context = null;
-var img_townhall = null;
-var img_farm = null;
-var img_warrior = null;
-var img_grass = null;
-var map = new Array();
-var menu = null;
-var canvas_offset = null;
+<?php
 
-var menu_nogame = new Array()
-menu_nogame["mouse_x"] = 0;
-menu_nogame["mouse_y"] = 0;
-menu_nogame["draw"] = function() {
-	context.fillStyle="#CCCCCC";
-	context.fillRect(270, 190, 100, 100);
+error_reporting(~0);
 
-	if(mouse_inside(270, 190, 370, 218)) {
-		context.fillStyle="#AAA";
-		context.fillRect(270, 190, 100, 28);
-	}
-
-	context.fillStyle="#000";
-	context.font="16px Georgia";
-	
-	draw_centered_text("New game", 320, 210);
+$protocol =  (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ? 'https' : 'http';
+$host = $_SERVER['SERVER_NAME'];
+$port = $_SERVER['SERVER_PORT'];
+if(($protocol == 'http' && $port != 80) || ($protocol == 'https' && $port != 443)) {
+	$port = ':'.$port;
+} else {
+	$port = '';
 }
-menu_nogame["onclick"] = function() {
-	if(mouse_inside(270, 190, 370, 218)) {
-		$.ajax({
-			type: 'POST',
-			url: '/',
-			data: {
-				id: id
-			},
-			success: function(data) {
-				if(ajax_logged_out(data)) return;
-				if(data !== false) {
+$base_url = "$protocol://$host$port/";
+$GLOBALS['base_url'] = $base_url;
+
+require_once '../util/htmltemplate.php';
+require_once '../util/log.php';
+
+$argv = explode("/",$_SERVER['PATH_INFO']);
+
+$memcache;
+$memcache = new Memcache;	
+$memcache->addServer('127.0.0.1', 11211);
+# Gets key / value pair from memcache
+function Get_cache($key) {
+	global $memcache;
+	return ($memcache) ? $memcache->get($key) : false;
+}
+
+# Puts key / value pair into memcache
+function Set_cache($key, $object, $timeout = 60) {
+	global $memcache;
+	return ($memcache) ? $memcache->set($key, $object, MEMCACHE_COMPRESSED, $timeout) : NULL;
+}
+
+function Delete_cache($key) {
+	global $memcache;
+	return ($memcache) ? $memcache->delete($key) : NULL;
+}
+
+if($argv[1] == "info")
+{
+	phpinfo();
+}
+else if($argv[1] == "mem")
+{
+	
+	Set_cache('test', 'woop');
+	var_dump(Get_cache('test'));
+	var_dump(Get_cache('tes'));
+}
+else if($argv[1] == "debug")
+{
+	//
+	for ($i = 2; $i<count($argv); $i++)
+	{
+		$argv[$i-1] = $argv[$i];
+	}
+	unset($argv[count($argv)-1]);
+?>
+	<html>
+		<head>
+			<link rel="stylesheet" type="text/css" media="screen" href="css/style.php">
+		</head>
+		<body>
+			Hello
+			<?php
+			echo "In: " . $_SERVER['PATH_INFO'] . "<br />";
+
+			echo "Arguments: " . count($argv) . "<br />";
+			var_dump($argv);
+			foreach ($argv as $arg)
+			{
+				echo "Arg: " . $arg . "<br />";
+			}
+			?>
+		</body>
+	</html>
+<?php
+}
+else
+{
+	//Load requested controller
+	if(count($argv)>1)
+	{
+		$controller_path = '../controllers/'.$argv[1].'.php';
+		if(!file_exists($controller_path))
+		{
+			Log_message("Could not load controller: ".$controller_path);
+			header("HTTP/1.0 404 Not Found");
+			include '../blocked.php';
+		}
+		else
+		{
+			$r = include($controller_path);
+	//		echo 'Result: '. $r .' : ' . $controller_path . '<br />';
+			if ($r != 1) {
+				//Todo: Log error
+	//			echo 'Failed '.$r.': ' . $controller_path . '<br />';
+				header("HTTP/1.0 404 Not Found");
+				include '../blocked.php';
+			}
+			else
+			{
+				$obj = new $argv[1];
+
+				if(count($argv)<3)
+				{
+					session_start();
+					$obj->Index();
+				}
+				else if(!method_exists($obj, $argv[2]))
+				{
+					header("HTTP/1.0 404 Not Found");
+					include '../blocked.php';
+				}
+				else
+				{
+					session_start();
+					$funcargs = array_slice($argv, 3);
+					call_user_func_array(array($obj, $argv[2]), $funcargs);
 				}
 			}
-		});
-		menu = null;
-		draw();
-	}
-}
-
-function mouse_inside(x1, y1, x2, y2) {
-	if(menu.mouse_x < x1 || menu.mouse_x > x2 || menu.mouse_y < y1 || menu.mouse_y > y2) {
-		return false;
-	}
-	return true;
-}
-
-function draw_centered_text(text, x, y) {
-	textmeasure = context.measureText(text);
-	context.fillText(text, x - textmeasure.width/2, y);
-}
-
-//$(document).ready(function() {
-$(window).load(function() {
-	canvas = document.getElementById("terraplot_canvas");
-	context = canvas.getContext("2d");
-	canvas_offset = $("#terraplot_canvas").offset();
-	
-	img_townhall = document.getElementById("img_townhall");
-	img_farm = document.getElementById("img_farm");
-	img_warrior = document.getElementById("img_warrior");
-	img_grass = document.getElementById("img_grass");
-
-	for(x = 0; x < 20; x++)
-	{
-		for(y = 0; y < 15; y++)
-		{
-			set_tile(x, y, new Array());
 		}
 	}
-
-	tile = get_tile(1, 1)
-	tile.building = img_townhall;
-	set_tile(1, 1, tile);
-	
-	tile = get_tile(2, 1)
-	tile.unit = img_warrior;
-	set_tile(2, 1, tile);
-	
-	menu = menu_nogame;
-	
-	draw();
-
-	$(document).keyup(function(event){
-	});
-	
-	$("#terraplot_canvas").mousemove(function(event) {
-		if(menu) {
-			menu.mouse_x = event.pageX - canvas_offset.left;
-			menu.mouse_y = event.pageY - canvas_offset.top;
-			menu.draw();
-		}
-	});
-	$("#terraplot_canvas").click(function(event) {
-		if(menu) {
-			menu.onclick(event);
-		}
-	});
-});
-
-function get_tile(x, y) {
-	return map[y*20+x];
 }
-
-function set_tile(x, y, d) {
-	map[y*20+x] = d;
-}
-
-function draw() {
-	//context.strokeRect(0, 0, canvas.width, canvas.height);
-	//context.fillStyle="#FF0000";
-	
-	for(x = 0; x < 20; x++)
-	{
-		for(y = 0; y < 15; y++)
-		{
-			var tile = get_tile(x, y);
-			draw_tile(img_grass, x, y);
-			if(tile["building"]) {
-				draw_tile(tile["building"], x, y);
-			}
-			if(tile["unit"]) {
-				draw_tile(tile["unit"], x, y);
-			}
-		}
-	}
-	
-	draw_tile(img_townhall, 3, 3);
-	draw_tile(img_farm, 2, 3);
-	draw_tile(img_warrior, 3, 3);
-	draw_tile(img_warrior, 2, 3);
-
-	draw_tile(img_townhall, 16, 3);
-	draw_tile(img_townhall, 3, 11);
-	draw_tile(img_townhall, 16, 11);
-	
-	if(menu) {
-		menu["draw"]();
-	}
-}
-
-function draw_tile(image, x, y) {
-	context.drawImage(image, x*32, y*32);
-}
-
-</script>
-</head>
-
-<body>
-<h1>Terraplot</h1>
-<canvas id="terraplot_canvas" width="640" height="480" style="border: 0px;">
-Your browser does not support the canvas element.
-</canvas>
-
-<img id="img_townhall" src="images/townhall.png" />
-<img id="img_farm" src="images/farm.png" />
-<img id="img_warrior" src="images/warrior.png" />
-<img id="img_grass" src="images/grass.png" />
-
-<span onclick="draw()">Redraw</span>
-
-</body>
