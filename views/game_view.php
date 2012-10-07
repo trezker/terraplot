@@ -7,10 +7,7 @@
 <script type="text/javascript">
 var canvas = null;
 var context = null;
-var img_townhall = null;
-var img_farm = null;
-var img_warrior = null;
-var img_grass = null;
+var images = new Array();
 var map = new Array();
 var menu = null;
 var canvas_offset = null;
@@ -36,13 +33,25 @@ menu_nogame["onclick"] = function() {
 	if(mouse_inside(270, 190, 370, 218)) {
 		$.ajax({
 			type: 'POST',
-			url: '/',
+			url: '/game/new_game',
 			data: {
-				id: id
 			},
 			success: function(data) {
-				if(ajax_logged_out(data)) return;
+				//if(ajax_logged_out(data)) return;
 				if(data !== false) {
+					clear_map();
+					var map = data.data.map;
+					for (var i = 0; i < map.length; i++) {
+						var serv = map[i];
+						tile = get_tile(serv.x, serv.y)
+						if(serv.building) {
+							tile.building = serv.building;
+						}
+						if(serv.warrior) {
+							tile.warrior = serv.warrior;
+						}
+					}
+					draw();
 				}
 			}
 		});
@@ -69,27 +78,25 @@ $(window).load(function() {
 	context = canvas.getContext("2d");
 	canvas_offset = $("#terraplot_canvas").offset();
 	
-	img_townhall = document.getElementById("img_townhall");
-	img_farm = document.getElementById("img_farm");
-	img_warrior = document.getElementById("img_warrior");
-	img_grass = document.getElementById("img_grass");
+	images["townhall"] = document.getElementById("img_townhall");
+	images["farm"] = document.getElementById("img_farm");
+	images["warrior"] = document.getElementById("img_warrior");
+	images["grass"] = document.getElementById("img_grass");
 
-	for(x = 0; x < 20; x++)
-	{
-		for(y = 0; y < 15; y++)
-		{
-			set_tile(x, y, new Array());
-		}
-	}
-
+	clear_map();
+/*
 	tile = get_tile(1, 1)
-	tile.building = img_townhall;
-	set_tile(1, 1, tile);
+	tile.building = "townhall";
+	//set_tile(1, 1, tile);
 	
+	tile = get_tile(3, 1)
+	tile.building = "farm";
+	//set_tile(3, 1, tile);
+
 	tile = get_tile(2, 1)
-	tile.unit = img_warrior;
-	set_tile(2, 1, tile);
-	
+	tile.unit = "warrior";
+	//set_tile(2, 1, tile);
+*/
 	menu = menu_nogame;
 	
 	draw();
@@ -111,6 +118,14 @@ $(window).load(function() {
 	});
 });
 
+function clear_map() {
+	for(x = 0; x < 20; x++) {
+		for(y = 0; y < 15; y++) {
+			set_tile(x, y, new Array());
+		}
+	}
+}
+
 function get_tile(x, y) {
 	return map[y*20+x];
 }
@@ -130,23 +145,14 @@ function draw() {
 			var tile = get_tile(x, y);
 			draw_tile(img_grass, x, y);
 			if(tile["building"]) {
-				draw_tile(tile["building"], x, y);
+				draw_tile(images[tile["building"]], x, y);
 			}
 			if(tile["unit"]) {
-				draw_tile(tile["unit"], x, y);
+				draw_tile(images[tile["unit"]], x, y);
 			}
 		}
 	}
-	
-	draw_tile(img_townhall, 3, 3);
-	draw_tile(img_farm, 2, 3);
-	draw_tile(img_warrior, 3, 3);
-	draw_tile(img_warrior, 2, 3);
 
-	draw_tile(img_townhall, 16, 3);
-	draw_tile(img_townhall, 3, 11);
-	draw_tile(img_townhall, 16, 11);
-	
 	if(menu) {
 		menu["draw"]();
 	}
