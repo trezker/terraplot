@@ -30,7 +30,7 @@ menu_nogame["onclick"] = function() {
 			data: {
 			},
 			success: function(data) {
-				//if(ajax_logged_out(data)) return;
+				if(ajax_logged_out(data)) return;
 				if(data !== false) {
 					clear_map();
 					var map = data.data.map;
@@ -44,12 +44,11 @@ menu_nogame["onclick"] = function() {
 							tile.warrior = serv.warrior;
 						}
 					}
+					menu = null;
 					draw();
 				}
 			}
 		});
-		menu = null;
-		draw();
 	}
 }
 
