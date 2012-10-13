@@ -16,7 +16,7 @@
 Your browser does not support the canvas element.
 </canvas>
 
-<div style="visible: hidden">
+<div style="visibility: hidden">
 <img id="img_townhall" src="data/images/townhall.png" />
 <img id="img_farm" src="data/images/farm.png" />
 <img id="img_warrior" src="data/images/warrior.png" />
