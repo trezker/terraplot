@@ -11,6 +11,20 @@
 
 <body>
 <h1>Terraplot</h1>
+
+<canvas id="terraplot_canvas" width="640" height="480" style="border: 0px;">
+Your browser does not support the canvas element.
+</canvas>
+
+<div style="visible: hidden">
+<img id="img_townhall" src="data/images/townhall.png" />
+<img id="img_farm" src="data/images/farm.png" />
+<img id="img_warrior" src="data/images/warrior.png" />
+<img id="img_grass" src="data/images/grass.png" />
+</div>
+
+<span onclick="draw()">Redraw</span>
+
 <?php if(isset($openid_icons) && $openid_icons != false) { ?>
 <div class="user_menu">
 	<span>Log in with OpenID</span>
@@ -30,16 +44,5 @@
 	</span>
 </div>
 <?php } ?>
-
-<canvas id="terraplot_canvas" width="640" height="480" style="border: 0px;">
-Your browser does not support the canvas element.
-</canvas>
-
-<img id="img_townhall" src="data/images/townhall.png" />
-<img id="img_farm" src="data/images/farm.png" />
-<img id="img_warrior" src="data/images/warrior.png" />
-<img id="img_grass" src="data/images/grass.png" />
-
-<span onclick="draw()">Redraw</span>
 
 </body>
