@@ -11,6 +11,19 @@ class Game extends Controller
 			return;
 		}
 
+		$this->Load_model('Game_model');
+		$game_id = $this->Game_model->Create_game();
+		if($game_id == false) {
+			echo json_encode(array('success' => false, 'reason' => 'Could not create game'));
+			return;
+		}			
+
+		if($this->Game_model->Create_players($game_id, 4) == false) {
+			$this->Game_model->Delete_game($game_id);
+			echo json_encode(array('success' => false, 'reason' => 'Could not create game'));
+			return;
+		}
+
 		$map = array();
 
 		$tile = array(

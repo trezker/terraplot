@@ -41,10 +41,10 @@ DROP TABLE IF EXISTS `Game`;
 CREATE TABLE `Game` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `Created` datetime NOT NULL,
-  `Turn` int(11) NOT NULL,
+  `Turn` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID_UNIQUE` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -57,15 +57,15 @@ DROP TABLE IF EXISTS `Player`;
 CREATE TABLE `Player` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `Game_ID` bigint(20) NOT NULL,
-  `User_ID` bigint(20) NOT NULL,
+  `User_ID` bigint(20) DEFAULT NULL,
   `Turn` int(11) NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID_UNIQUE` (`ID`),
   KEY `Player_fk_Game` (`Game_ID`),
   KEY `Player_fk_User` (`User_ID`),
-  CONSTRAINT `Player_fk_Game` FOREIGN KEY (`Game_ID`) REFERENCES `Game` (`ID`),
-  CONSTRAINT `Player_fk_User` FOREIGN KEY (`User_ID`) REFERENCES `User` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `Player_fk_User` FOREIGN KEY (`User_ID`) REFERENCES `User` (`ID`),
+  CONSTRAINT `Player_fk_Game` FOREIGN KEY (`Game_ID`) REFERENCES `Game` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -178,4 +178,4 @@ CREATE TABLE `User_openID` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-10-13 11:44:00
+-- Dump completed on 2012-10-13 20:03:30

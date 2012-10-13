@@ -31,7 +31,7 @@ menu_nogame["onclick"] = function() {
 			},
 			success: function(data) {
 				if(ajax_logged_out(data)) return;
-				if(data !== false) {
+				if(data.success !== false) {
 					clear_map();
 					var map = data.data.map;
 					for (var i = 0; i < map.length; i++) {
