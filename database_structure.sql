@@ -28,7 +28,7 @@ CREATE TABLE `Building` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID_UNIQUE` (`ID`),
   UNIQUE KEY `Name_UNIQUE` (`Name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `Game` (
   `Turn` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID_UNIQUE` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +65,7 @@ CREATE TABLE `Player` (
   KEY `Player_fk_User` (`User_ID`),
   CONSTRAINT `Player_fk_User` FOREIGN KEY (`User_ID`) REFERENCES `User` (`ID`),
   CONSTRAINT `Player_fk_Game` FOREIGN KEY (`Game_ID`) REFERENCES `Game` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +91,7 @@ CREATE TABLE `Tile` (
   CONSTRAINT `Tile_fk_Game` FOREIGN KEY (`Game_ID`) REFERENCES `Game` (`ID`),
   CONSTRAINT `Tile_fk_Building` FOREIGN KEY (`Building_ID`) REFERENCES `Building` (`ID`),
   CONSTRAINT `Tile_fk_Player` FOREIGN KEY (`Player_ID`) REFERENCES `Player` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -178,4 +178,4 @@ CREATE TABLE `User_openID` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-10-13 20:03:30
+-- Dump completed on 2012-10-14 12:49:47

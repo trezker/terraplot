@@ -59,4 +59,65 @@ class Game_model {
 		$db->CompleteTrans();
 		return !$failed;
 	}
+	
+	function Get_players($game_id) {
+		$db = Load_database();
+
+		$query = '
+			select P.ID, P.Turn, U.Username from Player P
+			left join User U on U.ID = P.User_ID
+			where Game_ID = ?
+			order by P.Turn asc';
+		$args = array($game_id);
+		$rs = $db->Execute($query, $args);
+		if(!$rs) {
+			return false;
+		}
+		return $rs->GetArray();
+	}
+	
+	function Join_player($game_id, $user_id, $turn) {
+		$db = Load_database();
+
+		$query = '
+			update Player set User_ID = ? where Game_ID = ? and Turn = ? and User_ID is NULL';
+		$args = array($user_id, $game_id, $turn, $user_id);
+		$rs = $db->Execute($query, $args);
+		if(!$rs) {
+			return false;
+		}
+		return true;
+	}
+	
+	function Get_tile($game_id, $x, $y) {
+		$db = Load_database();
+
+		$query = '
+			insert into Tile(Game_ID, X, Y) values(?, ?, ?)';
+		$args = array($game_id, $x, $y);
+		$rs = $db->Execute($query, $args);
+
+		$query = '
+			select T.ID, T.Building_ID, T.Player_ID from Tile T
+			where Game_ID = ? and X = ? and Y = ?
+			';
+		$args = array($game_id, $x, $y);
+		$rs = $db->Execute($query, $args);
+		
+		return $rs->fields;
+	}
+	
+	function Update_tile($tile_id, $building_id, $player_id) {
+		$db = Load_database();
+
+		$query = '
+			update Tile set Building_ID = ?, Player_ID = ? where ID = ?';
+		$args = array($building_id, $player_id, $tile_id);
+		$rs = $db->Execute($query, $args);
+		if(!$rs || 	$db->Affected_Rows() == 0) {
+			return false;
+		}
+		
+		return true;
+	}
 }

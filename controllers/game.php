@@ -23,6 +23,22 @@ class Game extends Controller
 			echo json_encode(array('success' => false, 'reason' => 'Could not create game'));
 			return;
 		}
+		
+		if($this->Game_model->Join_player($game_id, $_SESSION['userid'], 0) == false) {
+			echo json_encode(array('success' => false, 'reason' => 'Could not create game'));
+			return;
+		}
+		
+		$players = $this->Game_model->Get_players($game_id);
+		
+		$tile = $this->Game_model->Get_tile($game_id, 3, 3);
+		$this->Game_model->Update_tile($tile['ID'], 1, $players[0]['ID']);
+		$tile = $this->Game_model->Get_tile($game_id, 3, 11);
+		$this->Game_model->Update_tile($tile['ID'], 1, $players[0]['ID']);
+		$tile = $this->Game_model->Get_tile($game_id, 16, 11);
+		$this->Game_model->Update_tile($tile['ID'], 1, $players[0]['ID']);
+		$tile = $this->Game_model->Get_tile($game_id, 16, 3);
+		$this->Game_model->Update_tile($tile['ID'], 1, $players[0]['ID']);
 
 		$map = array();
 
