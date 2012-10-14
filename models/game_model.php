@@ -107,6 +107,28 @@ class Game_model {
 		return $rs->fields;
 	}
 	
+	function Get_tiles($game_id) {
+		$db = Load_database();
+
+		$query = '
+			select
+				T.ID,
+				T.Building_ID,
+				T.Player_ID,
+				T.X, T.Y,
+				B.Name as Building_name,
+				P.Turn as Owner_turn
+			from Tile T
+			left join Building B on B.ID = T.Building_ID
+			left join Player P on P.ID = T.Player_ID
+			where T.Game_ID = ?
+			';
+		$args = array($game_id);
+		$rs = $db->Execute($query, $args);
+		
+		return $rs->GetArray();
+	}
+	
 	function Update_tile($tile_id, $building_id, $player_id) {
 		$db = Load_database();
 

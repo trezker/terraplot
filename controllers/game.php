@@ -40,37 +40,7 @@ class Game extends Controller
 		$tile = $this->Game_model->Get_tile($game_id, 16, 3);
 		$this->Game_model->Update_tile($tile['ID'], 1, $players[0]['ID']);
 
-		$map = array();
-
-		$tile = array(
-							'x' => 3,
-							'y' => 3,
-							'building' => 'townhall',
-							'owner' => 0
-							);
- 		array_push($map, $tile);
-		$tile = array(
-							'x' => 3,
-							'y' => 11,
-							'building' => 'townhall',
-							'owner' => 1
-							);
- 		array_push($map, $tile);
-		$tile = array(
-							'x' => 16,
-							'y' => 11,
-							'building' => 'townhall',
-							'owner' => 2
-							);
- 		array_push($map, $tile);
-		$tile = array(
-							'x' => 16,
-							'y' => 3,
-							'building' => 'townhall',
-							'owner' => 3
-							);
- 		array_push($map, $tile);
-
+		$map = $this->Game_model->Get_tiles($game_id);
 
 		$data = array();
 		$data["map"] = $map;

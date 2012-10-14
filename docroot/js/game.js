@@ -36,9 +36,9 @@ menu_nogame["onclick"] = function() {
 					var map = data.data.map;
 					for (var i = 0; i < map.length; i++) {
 						var serv = map[i];
-						tile = get_tile(serv.x, serv.y)
-						if(serv.building) {
-							tile.building = serv.building;
+						tile = get_tile(parseInt(serv.X, 10), parseInt(serv.Y, 10))
+						if(serv.Building_name) {
+							tile.building = serv.Building_name;
 						}
 						if(serv.warrior) {
 							tile.warrior = serv.warrior;
