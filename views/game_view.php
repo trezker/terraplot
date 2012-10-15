@@ -12,9 +12,23 @@
 <body>
 <h1>Terraplot</h1>
 
+<div style="float: left;">
 <canvas id="terraplot_canvas" width="640" height="480" style="border: 0px;">
 Your browser does not support the canvas element.
 </canvas>
+</div>
+
+<div style="float: left;">
+	<?php
+	if(isset($gamelist) && $gamelist != false) {
+		echo '<h3>Your games</h3>';
+		foreach($gamelist as $game) {
+			$template = '<span class="action" onclick="load_game({Game_ID});">{Game_ID}</span><br />';
+			echo expand_template($template, $game);
+		}
+	}
+	?>
+</div>
 
 <div style="visibility: hidden">
 <img id="img_townhall" src="data/images/townhall.png" />

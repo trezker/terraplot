@@ -32,24 +32,45 @@ menu_nogame["onclick"] = function() {
 			success: function(data) {
 				if(ajax_logged_out(data)) return;
 				if(data.success !== false) {
-					clear_map();
-					var map = data.data.map;
-					for (var i = 0; i < map.length; i++) {
-						var serv = map[i];
-						tile = get_tile(parseInt(serv.X, 10), parseInt(serv.Y, 10))
-						if(serv.Building_name) {
-							tile.building = serv.Building_name;
-						}
-						if(serv.warrior) {
-							tile.warrior = serv.warrior;
-						}
-					}
 					menu = null;
-					draw();
+					update_map(data.data);
 				}
 			}
 		});
 	}
+}
+
+function load_game(game_id) {
+	$.ajax({
+		type: 'POST',
+		url: '/game/load_game',
+		data: {
+			game_id: game_id
+		},
+		success: function(data) {
+			if(ajax_logged_out(data)) return;
+			if(data.success !== false) {
+				menu = null;
+				update_map(data.data);
+			}
+		}
+	});
+}
+
+function update_map(data) {
+	clear_map();
+	var map = data.map;
+	for (var i = 0; i < map.length; i++) {
+		var serv = map[i];
+		tile = get_tile(parseInt(serv.X, 10), parseInt(serv.Y, 10))
+		if(serv.Building_name) {
+			tile.building = serv.Building_name;
+		}
+		if(serv.warrior) {
+			tile.warrior = serv.warrior;
+		}
+	}
+	draw();
 }
 
 function mouse_inside(x1, y1, x2, y2) {

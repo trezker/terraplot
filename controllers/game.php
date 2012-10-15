@@ -47,4 +47,23 @@ class Game extends Controller
 
 		echo json_encode(array('success' => true, 'data' => $data));
 	}
+
+	public function load_game() {
+		header('Content-type: application/json');
+		$this->Load_controller('User');
+		if(!$this->User->Logged_in()) {
+			echo json_encode(array('success' => false, 'reason' => 'Not logged in'));
+			return;
+		}
+		
+		$game_id = $_POST['game_id'];
+
+		$this->Load_model('Game_model');
+		$map = $this->Game_model->Get_tiles($game_id);
+
+		$data = array();
+		$data["map"] = $map;
+
+		echo json_encode(array('success' => true, 'data' => $data));
+	}
 }

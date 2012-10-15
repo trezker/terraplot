@@ -5,8 +5,11 @@ class Front extends Controller
 {
 	public function Index()
 	{
+		$gamelist = null;
 		if(isset($_SESSION['userid'])) {
 			$openid_icons = false;
+			$this->Load_model('Game_model');
+			$gamelist = $this->Game_model->Get_user_games($_SESSION['userid']);
 		}
 		else {
 			$this->Load_model('User_model');
@@ -14,7 +17,8 @@ class Front extends Controller
 		}
 
 		$this->Load_view('game_view', array(
-											'openid_icons' => $openid_icons
+											'openid_icons' => $openid_icons,
+											'gamelist' => $gamelist
 											));
 	}
 

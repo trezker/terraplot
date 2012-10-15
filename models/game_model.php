@@ -89,6 +89,19 @@ class Game_model {
 		return true;
 	}
 	
+	function Get_user_games($user_id) {
+		$db = Load_database();
+
+		$query = '
+			select P.Game_ID from Player P where P.User_ID = ?';
+		$args = array($user_id);
+		$rs = $db->Execute($query, $args);
+		if(!$rs) {
+			return false;
+		}
+		return $rs->GetArray();
+	}
+	
 	function Get_tile($game_id, $x, $y) {
 		$db = Load_database();
 
