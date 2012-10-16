@@ -34,11 +34,11 @@ class Game extends Controller
 		$tile = $this->Game_model->Get_tile($game_id, 3, 3);
 		$this->Game_model->Update_tile($tile['ID'], 1, $players[0]['ID']);
 		$tile = $this->Game_model->Get_tile($game_id, 3, 11);
-		$this->Game_model->Update_tile($tile['ID'], 1, $players[0]['ID']);
+		$this->Game_model->Update_tile($tile['ID'], 1, $players[1]['ID']);
 		$tile = $this->Game_model->Get_tile($game_id, 16, 11);
-		$this->Game_model->Update_tile($tile['ID'], 1, $players[0]['ID']);
+		$this->Game_model->Update_tile($tile['ID'], 1, $players[2]['ID']);
 		$tile = $this->Game_model->Get_tile($game_id, 16, 3);
-		$this->Game_model->Update_tile($tile['ID'], 1, $players[0]['ID']);
+		$this->Game_model->Update_tile($tile['ID'], 1, $players[3]['ID']);
 
 		$map = $this->Game_model->Get_tiles($game_id);
 

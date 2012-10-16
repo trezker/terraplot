@@ -63,6 +63,9 @@ function update_map(data) {
 	for (var i = 0; i < map.length; i++) {
 		var serv = map[i];
 		tile = get_tile(parseInt(serv.X, 10), parseInt(serv.Y, 10))
+		if(serv.Owner_turn) {
+			tile.owner_turn = serv.Owner_turn;
+		}
 		if(serv.Building_name) {
 			tile.building = serv.Building_name;
 		}
@@ -151,10 +154,8 @@ function draw() {
 	//context.strokeRect(0, 0, canvas.width, canvas.height);
 	//context.fillStyle="#FF0000";
 	
-	for(x = 0; x < 20; x++)
-	{
-		for(y = 0; y < 15; y++)
-		{
+	for(x = 0; x < 20; x++) {
+		for(y = 0; y < 15; y++) {
 			var tile = get_tile(x, y);
 			draw_tile(img_grass, x, y);
 			if(tile["building"]) {
@@ -162,6 +163,28 @@ function draw() {
 			}
 			if(tile["unit"]) {
 				draw_tile(images[tile["unit"]], x, y);
+			}
+		}
+	}
+	context.lineWidth=3;
+	for(x = 0; x < 20; x++) {
+		for(y = 0; y < 15; y++) {
+			var tile = get_tile(x, y);
+			if(tile.owner_turn) {
+				alert(tile.owner_turn);
+				if(tile.owner_turn == 0) {
+					context.strokeStyle = "rgba(255, 0, 0, 0.25)";
+				}
+				if(tile.owner_turn == 1) {
+					context.strokeStyle = "rgba(0, 255, 0, 0.25)";
+				}
+				if(tile.owner_turn == 2) {
+					context.strokeStyle = "rgba(0, 0, 255, 0.25)";
+				}
+				if(tile.owner_turn == 3) {
+					context.strokeStyle = "rgba(0, 255, 255, 0.25)";
+				}
+				context.strokeRect(x*32 + 0.5, y*32 + 0.5, 31, 31);
 			}
 		}
 	}
