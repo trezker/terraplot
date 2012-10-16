@@ -10,24 +10,44 @@
 </head>
 
 <body>
-<h1>Terraplot</h1>
-
 <div style="float: left;">
-<canvas id="terraplot_canvas" width="640" height="480" style="border: 0px;">
-Your browser does not support the canvas element.
-</canvas>
+<h1>Terraplot</h1>
+<div class="action" onclick="draw()">Redraw map</div>
+<?php
+if(isset($gamelist) && $gamelist != false) {
+	echo '<h3>Your games</h3>';
+	foreach($gamelist as $game) {
+		$template = '<span class="action" onclick="load_game({Game_ID});">{Game_ID}</span><br />';
+		echo expand_template($template, $game);
+	}
+}
+if(isset($openid_icons) && $openid_icons != false) {
+	echo '
+		<div class="user_menu">
+			<span>Log in with OpenID</span>
+			<span>
+				<div>
+					<span class="openid_icons">
+		';
+	foreach($openid_icons as $icon) {
+		echo '<span class="action openid_icon" data-tooltip="'.$icon['name'].'"><img src="'.$icon['icon'].'" height="16" width="16" onclick="login(\''.$icon['URI'].'\');" /></span>';
+	}
+	echo '
+					</span>
+				</div>
+				<span><input type="text" name="openid" id="openid" /></span>
+				<span class="login_action action" onclick="login();">Log in</span>
+				<div id="openidfeedback">&nbsp;</div>
+			</span>
+		</div>
+		';
+} ?>
 </div>
 
-<div style="float: left;">
-	<?php
-	if(isset($gamelist) && $gamelist != false) {
-		echo '<h3>Your games</h3>';
-		foreach($gamelist as $game) {
-			$template = '<span class="action" onclick="load_game({Game_ID});">{Game_ID}</span><br />';
-			echo expand_template($template, $game);
-		}
-	}
-	?>
+<div style="float: left; margin-left: 10px;">
+	<canvas id="terraplot_canvas" width="640" height="480" style="border: 0px;">
+		Your browser does not support the canvas element.
+	</canvas>
 </div>
 
 <div style="visibility: hidden">
@@ -36,27 +56,4 @@ Your browser does not support the canvas element.
 <img id="img_warrior" src="data/images/warrior.png" />
 <img id="img_grass" src="data/images/grass.png" />
 </div>
-
-<span onclick="draw()">Redraw</span>
-
-<?php if(isset($openid_icons) && $openid_icons != false) { ?>
-<div class="user_menu">
-	<span>Log in with OpenID</span>
-	<span>
-		<div>
-			<span class="openid_icons">
-				<?php
-					foreach($openid_icons as $icon) {
-						echo '<span class="action openid_icon" data-tooltip="'.$icon['name'].'"><img src="'.$icon['icon'].'" height="16" width="16" onclick="login(\''.$icon['URI'].'\');" /></span>';
-					}
-				?>
-			</span>
-		</div>
-		<span><input type="text" name="openid" id="openid" /></span>
-		<span class="login_action action" onclick="login();">Log in</span>
-		<div id="openidfeedback">&nbsp;</div>
-	</span>
-</div>
-<?php } ?>
-
 </body>
