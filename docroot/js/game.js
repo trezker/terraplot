@@ -4,6 +4,8 @@ var images = new Array();
 var map = new Array();
 var menu = null;
 var canvas_offset = null;
+var tile_x = 0;
+var tile_y = 0;
 
 var menu_nogame = new Array()
 menu_nogame["mouse_x"] = 0;
@@ -108,6 +110,16 @@ $(window).load(function() {
 	});
 	
 	$("#terraplot_canvas").mousemove(function(event) {
+		mouse_x = event.pageX - canvas_offset.left;
+		mouse_y = event.pageY - canvas_offset.top;
+
+		draw_tile_layers(tile_x, tile_y);
+		draw_tile_overlay(tile_x, tile_y);
+		tile_x = Math.floor(mouse_x / 32);
+		tile_y = Math.floor(mouse_y / 32);
+		context.fillStyle = "rgba(255,255,255,0.25)";
+		context.fillRect(tile_x*32, tile_y*32, 32, 32);
+
 		if(menu) {
 			menu.mouse_x = event.pageX - canvas_offset.left;
 			menu.mouse_y = event.pageY - canvas_offset.top;
@@ -140,36 +152,12 @@ function set_tile(x, y, d) {
 function draw() {
 	for(x = 0; x < 20; x++) {
 		for(y = 0; y < 15; y++) {
-			var tile = get_tile(x, y);
-			draw_tile(img_grass, x, y);
-			if(tile["building"]) {
-				draw_tile(images[tile["building"]], x, y);
-			}
-			if(tile["unit"]) {
-				draw_tile(images[tile["unit"]], x, y);
-			}
+			draw_tile_layers(x, y);
 		}
 	}
-	context.lineWidth=3;
 	for(x = 0; x < 20; x++) {
 		for(y = 0; y < 15; y++) {
-			var tile = get_tile(x, y);
-			if(tile.owner_turn) {
-				alert(tile.owner_turn);
-				if(tile.owner_turn == 0) {
-					context.strokeStyle = "rgba(255, 0, 0, 0.25)";
-				}
-				if(tile.owner_turn == 1) {
-					context.strokeStyle = "rgba(0, 255, 0, 0.25)";
-				}
-				if(tile.owner_turn == 2) {
-					context.strokeStyle = "rgba(0, 0, 255, 0.25)";
-				}
-				if(tile.owner_turn == 3) {
-					context.strokeStyle = "rgba(0, 255, 255, 0.25)";
-				}
-				context.strokeRect(x*32 + 0.5, y*32 + 0.5, 31, 31);
-			}
+			draw_tile_overlay(x, y);
 		}
 	}
 
@@ -178,6 +166,37 @@ function draw() {
 	}
 }
 
-function draw_tile(image, x, y) {
+function draw_tile_layers(x, y) {
+	var tile = get_tile(x, y);
+	draw_tile_image(img_grass, x, y);
+	if(tile["building"]) {
+		draw_tile_image(images[tile["building"]], x, y);
+	}
+	if(tile["unit"]) {
+		draw_tile_image(images[tile["unit"]], x, y);
+	}
+}
+
+function draw_tile_overlay(x, y) {
+	var tile = get_tile(x, y);
+	if(tile.owner_turn) {
+		context.lineWidth=4;
+		if(tile.owner_turn == 0) {
+			context.strokeStyle = "rgba(255, 0, 0, 0.25)";
+		}
+		if(tile.owner_turn == 1) {
+			context.strokeStyle = "rgba(0, 255, 0, 0.25)";
+		}
+		if(tile.owner_turn == 2) {
+			context.strokeStyle = "rgba(0, 0, 255, 0.25)";
+		}
+		if(tile.owner_turn == 3) {
+			context.strokeStyle = "rgba(0, 255, 255, 0.25)";
+		}
+		context.strokeRect(x*32 + 2, y*32 + 2, 28, 28);
+	}
+}
+
+function draw_tile_image(image, x, y) {
 	context.drawImage(image, x*32, y*32);
 }
