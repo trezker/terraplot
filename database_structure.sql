@@ -44,7 +44,7 @@ CREATE TABLE `Game` (
   `Turn` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID_UNIQUE` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -63,9 +63,9 @@ CREATE TABLE `Player` (
   UNIQUE KEY `ID_UNIQUE` (`ID`),
   KEY `Player_fk_Game` (`Game_ID`),
   KEY `Player_fk_User` (`User_ID`),
-  CONSTRAINT `Player_fk_User` FOREIGN KEY (`User_ID`) REFERENCES `User` (`ID`),
-  CONSTRAINT `Player_fk_Game` FOREIGN KEY (`Game_ID`) REFERENCES `Game` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+  CONSTRAINT `Player_fk_Game` FOREIGN KEY (`Game_ID`) REFERENCES `Game` (`ID`) ON DELETE CASCADE,
+  CONSTRAINT `Player_fk_User` FOREIGN KEY (`User_ID`) REFERENCES `User` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,10 +88,10 @@ CREATE TABLE `Tile` (
   KEY `Tile_fk_Game` (`Game_ID`),
   KEY `Tile_fk_Building` (`Building_ID`),
   KEY `Tile_fk_Player` (`Player_ID`),
-  CONSTRAINT `Tile_fk_Game` FOREIGN KEY (`Game_ID`) REFERENCES `Game` (`ID`),
-  CONSTRAINT `Tile_fk_Building` FOREIGN KEY (`Building_ID`) REFERENCES `Building` (`ID`),
-  CONSTRAINT `Tile_fk_Player` FOREIGN KEY (`Player_ID`) REFERENCES `Player` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+  CONSTRAINT `Tile_fk_Player` FOREIGN KEY (`Player_ID`) REFERENCES `Player` (`ID`) ON DELETE CASCADE,
+  CONSTRAINT `Tile_fk_Game` FOREIGN KEY (`Game_ID`) REFERENCES `Game` (`ID`) ON DELETE CASCADE,
+  CONSTRAINT `Tile_fk_Building` FOREIGN KEY (`Building_ID`) REFERENCES `Building` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -178,4 +178,4 @@ CREATE TABLE `User_openID` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-10-14 12:49:47
+-- Dump completed on 2012-12-08 18:35:12
