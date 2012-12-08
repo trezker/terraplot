@@ -88,7 +88,6 @@ function draw_centered_text(text, x, y) {
 	context.fillText(text, x - textmeasure.width/2, y);
 }
 
-//$(document).ready(function() {
 $(window).load(function() {
 	canvas = document.getElementById("terraplot_canvas");
 	context = canvas.getContext("2d");
@@ -100,19 +99,7 @@ $(window).load(function() {
 	images["grass"] = document.getElementById("img_grass");
 
 	clear_map();
-/*
-	tile = get_tile(1, 1)
-	tile.building = "townhall";
-	//set_tile(1, 1, tile);
-	
-	tile = get_tile(3, 1)
-	tile.building = "farm";
-	//set_tile(3, 1, tile);
 
-	tile = get_tile(2, 1)
-	tile.unit = "warrior";
-	//set_tile(2, 1, tile);
-*/
 	menu = menu_nogame;
 	
 	draw();
@@ -151,9 +138,6 @@ function set_tile(x, y, d) {
 }
 
 function draw() {
-	//context.strokeRect(0, 0, canvas.width, canvas.height);
-	//context.fillStyle="#FF0000";
-	
 	for(x = 0; x < 20; x++) {
 		for(y = 0; y < 15; y++) {
 			var tile = get_tile(x, y);
